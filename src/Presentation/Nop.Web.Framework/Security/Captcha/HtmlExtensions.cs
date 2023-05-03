@@ -124,7 +124,7 @@ namespace Nop.Web.Framework.Security.Captcha
         /// A task that represents the asynchronous operation
         /// The task result contains the result
         /// </returns>
-        public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings)
+        public static async Task<IHtmlContent> GenerateReCaptchaV3Async(this IHtmlHelper helper, CaptchaSettings captchaSettings, string actionName)
         {
             //prepare language
             var language = await GetReCaptchaLanguageAsync(captchaSettings);
@@ -136,7 +136,9 @@ namespace Nop.Web.Framework.Security.Captcha
             var publicKey = captchaSettings.ReCaptchaPublicKey ?? string.Empty;
 
             //prepare reCAPTCHA script
-            var actionName = helper.ViewContext.RouteData.Values["action"].ToString();
+            if (string.IsNullOrEmpty(actionName))
+                actionName = helper.ViewContext.RouteData.Values["action"].ToString();
+
             var scriptCallback = $@"
                 var onloadCallback{id} = function() {{
                     var form = $('input[id=""g-recaptcha-response_{id}""]').closest('form');
