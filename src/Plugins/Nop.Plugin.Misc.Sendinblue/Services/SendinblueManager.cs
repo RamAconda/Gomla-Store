@@ -485,12 +485,8 @@ namespace Nop.Plugin.Misc.Sendinblue.Services
                 }
                 catch (ApiException apiException)
                 {
-                    if (apiException.ErrorCode == 404)
-                    {
-                        return;
-                    }
-                    else
-                    {
+                    if (apiException.ErrorCode != 404)
+                    {                        
                         await _logger.ErrorAsync($"Sendinblue error: {apiException.Message}.", apiException, await _workContext.GetCurrentCustomerAsync());
                         return;
                     }
